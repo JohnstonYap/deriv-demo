@@ -7,56 +7,88 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="/" class="logo-link">
+            <div class="logo-section-small">
+                <div class="logo-icon-small">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QB Bot Logo" class="logo-image-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                        <path d="M30 5L35 15L45 10L40 20L50 25L40 30L45 40L35 35L30 45L25 35L15 40L20 30L10 25L20 20L15 10L25 15L30 5Z" fill="#fbbf24"/>
+                    </svg>
+                </div>
+                <span class="logo-text-small">QB Bot</span>
+            </div>
+        </a>
+    </nav>
+
     <div class="container wide">
-        <!-- Logo -->
-        <div class="logo-section-small">
-            <div class="logo-icon-small">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QB Bot Logo" class="logo-image-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                    <path d="M30 5L35 15L45 10L40 20L50 25L40 30L45 40L35 35L30 45L25 35L15 40L20 30L10 25L20 20L15 10L25 15L30 5Z" fill="#fbbf24"/>
-                </svg>
-            </div>
-            <span class="logo-text-small">QB Bot</span>
-        </div>
-
-        <!-- Progress Indicator -->
-        <div class="progress-indicator">
-            <div class="progress-step completed">
-                <span class="step-number">✓</span>
-                <span class="step-label">Configure</span>
-            </div>
-            <div class="progress-line active"></div>
-            <div class="progress-step completed">
-                <span class="step-number">✓</span>
-                <span class="step-label">Select Tests</span>
-            </div>
-            <div class="progress-line active"></div>
-            <div class="progress-step active">
-                <span class="step-number">3</span>
-                <span class="step-label">Results</span>
-            </div>
-        </div>
-
-        <!-- Performance Score -->
-        <div class="performance-score-section">
-            <div class="score-container">
-                <svg class="score-circle" width="200" height="200">
-                    <circle cx="100" cy="100" r="90" fill="none" stroke="#fef3c7" stroke-width="12"/>
-                    <circle cx="100" cy="100" r="90" fill="none" stroke="#10b981" stroke-width="12" 
-                            stroke-dasharray="{{ (results.overall_score / 100) * 565.49 }} 565.49" 
-                            transform="rotate(-90 100 100)" 
-                            stroke-linecap="round"/>
-                </svg>
-                <div class="score-content">
-                    <div class="score-value">{{ results.overall_score }}</div>
-                    <div class="score-label">Performance Score</div>
+        <!-- Loading Progress State -->
+        <div id="loadingState" class="loading-state-container">
+            <div class="loading-progress">
+                <div class="progress-circle-wrapper">
+                    <svg class="score-circle" width="100%" height="100%" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#fef3c7" stroke-width="12"/>
+                        <circle class="progress-ring" cx="100" cy="100" r="90" fill="none" stroke="#10b981" stroke-width="12"
+                                transform="rotate(180 100 100)" stroke-linecap="round"></circle>
+                    </svg>
+                </div>
+                <div class="test-items-list">
+                    {% set test_categories = [] %}
+                    {% for result in results.test_results %}
+                        {% if result.category not in test_categories %}
+                            {% set _ = test_categories.append(result.category) %}
+                        {% endif %}
+                    {% endfor %}
+                    {% for category in test_categories %}
+                    <div class="test-item" data-status="waiting">
+                        <span class="test-name">{{ category }}</span>
+                        <span class="test-status">Waiting</span>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
-            <div class="score-details">
-                <p class="score-description">Testing on: {{ results.config.environment }} • {{ results.config.resolution }}</p>
-                <p class="score-url">{{ results.url }}</p>
-            </div>
         </div>
+
+        <!-- Results State (Hidden until loading completes) -->
+        <div id="resultsState" style="display: none;">
+            <!-- Progress Indicator -->
+            <div class="progress-indicator">
+                <div class="progress-step completed">
+                    <span class="step-number">✓</span>
+                    <span class="step-label">Configure</span>
+                </div>
+                <div class="progress-line active"></div>
+                <div class="progress-step completed">
+                    <span class="step-number">✓</span>
+                    <span class="step-label">Select Tests</span>
+                </div>
+                <div class="progress-line active"></div>
+                <div class="progress-step active">
+                    <span class="step-number">3</span>
+                    <span class="step-label">Results</span>
+                </div>
+            </div>
+
+            <!-- Performance Score -->
+            <div class="performance-score-section">
+                <div class="score-container">
+                    <svg class="score-circle" width="100%" height="100%" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#fef3c7" stroke-width="12"/>
+                        <!-- progress ring: start from west (9 o'clock) -->
+                        <circle class="progress-ring" cx="100" cy="100" r="90" fill="none" stroke="#10b981" stroke-width="12"
+                                transform="rotate(180 100 100)" stroke-linecap="round"></circle>
+                    </svg>
+                    <div class="score-content">
+                        <div class="score-value">{{ results.overall_score }}</div>
+                        <div class="score-label">Performance Score</div>
+                    </div>
+                </div>
+                <div class="score-details">
+                    <p class="score-description">Testing on: {{ results.config.environment }} • {{ results.config.resolution }}</p>
+                    <p class="score-url">{{ results.url }}</p>
+                </div>
+            </div>
 
         <!-- Performance Metrics -->
         <div class="metrics-grid">
@@ -99,6 +131,8 @@
                 </div>
             </div>
         </div>
+
+        <!-- Statistics Cards -->
 
         <!-- Statistics Cards -->
         <div class="stats-grid">
@@ -217,5 +251,7 @@
             </a>
         </div>
     </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/page3.js') }}"></script>
 </body>
 </html>

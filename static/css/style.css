@@ -115,7 +115,7 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 40px;
+    margin-bottom: 0px;
 }
 
 .logo-icon-small svg,
@@ -434,12 +434,13 @@ select {
     gap: 12px;
     padding: 12px 24px;
     background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border: 2px solid var(--primary-yellow);
+    border: none;
     border-radius: 100px;
     font-size: 14px;
     color: var(--text-dark);
     margin-bottom: 40px;
     font-weight: 600;
+    text-decoration: none;
 }
 
 .url-badge svg {
@@ -826,7 +827,41 @@ select {
 }
 
 .score-circle {
-    transform: rotate(-90deg);
+    width: min(240px, 44vw);
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+/* ensure SVG scales internally while absolute centered content stays centered */
+.score-container svg { display: block; }
+.score-container .score-content { width: 100%; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+
+/* Pivot/animation behavior */
+.score-container {
+    transition: transform 320ms cubic-bezier(.2,.85,.32,1);
+}
+.score-container.pivoted {
+    transform: translateX(-36px) scale(0.98);
+}
+
+/* hide content until revealed */
+.metrics-grid, .stats-grid, .results-container {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 360ms ease, transform 360ms ease;
+    pointer-events: none;
+}
+.metrics-grid.revealed, .stats-grid.revealed, .results-container.revealed {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* progress ring transition */
+.progress-ring {
+    transition: stroke-dashoffset 1s linear;
+    transform-origin: 100px 100px;
 }
 
 .score-content {
@@ -872,6 +907,141 @@ select {
     color: var(--text-dark);
     font-weight: 600;
     word-break: break-all;
+    text-decoration: none;
+    border: none;
+}
+
+/* Logo link */
+.logo-link {
+    color: inherit;
+    text-decoration: none;
+    display: inline-block;
+}
+
+/* Navigation Bar */
+.navbar {
+    background: #f7ce87;
+    padding: 10px 0;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom:5px;
+}
+
+.navbar .logo-link {
+    padding: 0 0px;
+}
+
+/* Loading Progress Container */
+.loading-state-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 20px;
+    gap: 60px;
+}
+
+.loading-progress {
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+    width: 100%;
+    max-width: 1000px;
+}
+
+.progress-circle-wrapper {
+    flex-shrink: 0;
+    width: min(200px, 35vw);
+    display: flex;
+    justify-content: center;
+}
+
+.test-items-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 300px;
+}
+
+.test-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: var(--bg-light);
+    border: 2px solid var(--border-light);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.test-item[data-status="waiting"] {
+    background: var(--bg-light);
+    border-color: var(--border-light);
+}
+
+.test-item[data-status="checking"] {
+    background: #fef3c7;
+    border-color: var(--primary-yellow);
+}
+
+.test-item[data-status="done"] {
+    background: #dcfce7;
+    border-color: var(--success);
+}
+
+.test-name {
+    font-size: 14px;
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+.test-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 16px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    min-width: 80px;
+    text-align: center;
+    background: var(--text-light);
+    color: white;
+}
+
+.test-item[data-status="checking"] .test-status {
+    background: var(--primary-yellow);
+    color: white;
+}
+
+.test-item[data-status="done"] .test-status {
+    background: var(--success);
+    color: white;
+}
+
+/* Responsive: phone layout */
+@media (max-width: 768px) {
+    .navbar {
+        justify-content: center;
+    }
+
+    .loading-progress {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+
+    .progress-circle-wrapper {
+        width: min(160px, 50vw);
+    }
+
+    .test-items-list {
+        width: 100%;
+        max-width: 100%;
+    }
 }
 
 /* Metrics Grid */
@@ -1219,5 +1389,22 @@ select {
 
     .score-value {
         font-size: 48px;
+    }
+}
+
+/* Phones: show 2 columns for metrics and stats */
+@media (max-width: 480px) {
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .metric-card, .stat-card {
+        padding: 16px;
     }
 }

@@ -8,16 +8,17 @@
 </head>
 <body>
     <div class="container wide">
-        <!-- Logo -->
-        <div class="logo-section-small">
-            <div class="logo-icon-small">
-                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QB Bot Logo" class="logo-image-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                    <path d="M30 5L35 15L45 10L40 20L50 25L40 30L45 40L35 35L30 45L25 35L15 40L20 30L10 25L20 20L15 10L25 15L30 5Z" fill="#fbbf24"/>
-                </svg>
+        <a href="/" class="logo-link">
+            <div class="logo-section-small">
+                <div class="logo-icon-small">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QB Bot Logo" class="logo-image-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                        <path d="M30 5L35 15L45 10L40 20L50 25L40 30L45 40L35 35L30 45L25 35L15 40L20 30L10 25L20 20L15 10L25 15L30 5Z" fill="#fbbf24"/>
+                    </svg>
+                </div>
+                <span class="logo-text-small">QB Bot</span>
             </div>
-            <span class="logo-text-small">QB Bot</span>
-        </div>
+        </a>
 
         <!-- Progress Indicator -->
         <div class="progress-indicator">
@@ -45,7 +46,9 @@
             <span>{{ url }}</span>
         </div>
 
-        <form action="{{ url_for('run_tests') }}" method="POST" id="testsForm">
+        <!-- Tests Form Section -->
+        <div class="form-section">
+            <form action="{{ url_for('run_tests') }}" method="POST" id="testsForm">
             
             <!-- 1. Test Scope -->
             <div class="section-card">
@@ -208,8 +211,7 @@
                     </svg>
                 </button>
             </div>
-        </form>
-    </div>
+        </form>        </div>    </div>
 
     <script src="{{ url_for('static', filename='js/page2.js') }}"></script>
 </body>
