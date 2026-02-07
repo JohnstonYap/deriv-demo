@@ -46,9 +46,9 @@
                 </div>
 
                 <!-- Report Information -->
-                <div class="config-sections">
+                <div class="config-sections" id="configSections" style="display: none;">
                     <div class="config-column">
-                        <h4 class="column-title">LOCATIONS</h4>
+                        <h4 class="column-title">Enviroment</h4>
                         
                         <div class="radio-group">
                             <label class="radio-option">
@@ -59,30 +59,68 @@
                             <label class="radio-option">
                                 <input type="radio" name="environment" value="iOS">
                                 <span class="radio-custom"></span>
-                                <span class="radio-label">iOS (Real)</span>
+                                <span class="radio-label">iOS</span>
                             </label>
                             <label class="radio-option">
                                 <input type="radio" name="environment" value="Android">
                                 <span class="radio-custom"></span>
                                 <span class="radio-label">Android</span>
                             </label>
+                            <label class="radio-option">
+                                <input type="radio" name="environment" value="Desktop">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">Dekstop</span>
+                            </label>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group" id="resolutionGroup" style="display: none; transform-origin: top center;">
                             <label for="resolution">Resolution</label>
                             <select id="resolution" name="resolution" required>
                                 <option value="">Select Resolution</option>
                             </select>
                         </div>
 
-                        <div class="input-group">
-                            <label for="testDate">Test Date</label>
-                            <input type="text" id="testDate" name="test_date" value="{{ today }}" required />
+                        <!-- Test Date removed (enhancement) -->
+                    </div>
+
+                    <div class="config-column">
+                        <h4 class="column-title">Browser</h4>
+                        
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="browser" value="Chrome" required>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">Chrome</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="browser" value="Safari">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">Safari</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="browser" value="Edge">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">Edge</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="browser" value="Firefox">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">Firefox</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="browser" value="Others">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">Others</span>
+                            </label>
+                        </div>
+
+                        <div class="input-group" id="browserOtherGroup" style="display: none;">
+                            <input type="text" id="browserOther" name="browser_other" placeholder="Enter browser name" />
                         </div>
                     </div>
 
                     <div class="config-column">
-                        <h4 class="column-title">SPEED METHOD</h4>
+                        <h4 class="column-title">Tester Level</h4>
                         
                         <div class="radio-group">
                             <label class="radio-option">
@@ -107,41 +145,7 @@
                         </div>
                     </div>
 
-                    <div class="config-column">
-                        <h4 class="column-title">DEVICE RENDER</h4>
-                        
-                        <div class="radio-group">
-                            <label class="radio-option">
-                                <input type="radio" name="browser" value="Chrome" required>
-                                <span class="radio-custom"></span>
-                                <span class="radio-label">Chrome</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="browser" value="Firefox">
-                                <span class="radio-custom"></span>
-                                <span class="radio-label">Firefox</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="browser" value="Safari">
-                                <span class="radio-custom"></span>
-                                <span class="radio-label">Safari</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="browser" value="Edge">
-                                <span class="radio-custom"></span>
-                                <span class="radio-label">Edge</span>
-                            </label>
-                            <label class="radio-option">
-                                <input type="radio" name="browser" value="Others">
-                                <span class="radio-custom"></span>
-                                <span class="radio-label">Others</span>
-                            </label>
-                        </div>
-
-                        <div class="input-group" id="browserOtherGroup" style="display: none;">
-                            <input type="text" id="browserOther" name="browser_other" placeholder="Enter browser name" />
-                        </div>
-                    </div>
+                    
                 </div>
             </form>
         </div>
@@ -179,7 +183,6 @@
         {% endif %}
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="{{ url_for('static', filename='js/page1.js') }}"></script>
 </body>
 </html>

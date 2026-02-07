@@ -41,21 +41,17 @@ const resolutions = {
     ]
 };
 
-// Initialize Flatpickr for date picker
-flatpickr("#testDate", {
-    dateFormat: "Y-m-d",
-    defaultDate: "today",
-    disableMobile: true
-});
+// Test Date removed: flatpickr initialization removed
 
 // Handle environment change to update resolutions
 document.querySelectorAll('input[name="environment"]').forEach(radio => {
     radio.addEventListener('change', function() {
         const resolutionSelect = document.getElementById('resolution');
+        const resolutionGroup = document.getElementById('resolutionGroup');
         const selectedEnv = this.value;
-        
+
         resolutionSelect.innerHTML = '<option value="">Select Resolution</option>';
-        
+
         if (selectedEnv && resolutions[selectedEnv]) {
             resolutions[selectedEnv].forEach(res => {
                 const option = document.createElement('option');
@@ -63,6 +59,16 @@ document.querySelectorAll('input[name="environment"]').forEach(radio => {
                 option.textContent = res;
                 resolutionSelect.appendChild(option);
             });
+
+            // show + animate the resolution group
+            resolutionGroup.style.display = 'block';
+            resolutionGroup.classList.remove('pop-in');
+            void resolutionGroup.offsetWidth;
+            resolutionGroup.classList.add('pop-in');
+        } else {
+            // hide when no selection
+            resolutionGroup.classList.remove('pop-in');
+            resolutionGroup.style.display = 'none';
         }
     });
 });
@@ -177,4 +183,35 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
+});
+
+// Show config sections only when a valid URL is entered
+function isValidUrl(value) {
+    if (!value) return false;
+    try {
+        new URL(value);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
+
+const urlInput = document.getElementById('urlInput');
+const configSections = document.getElementById('configSections');
+function toggleConfigSections() {
+    if (!urlInput || !configSections) return;
+    if (isValidUrl(urlInput.value.trim())) {
+        configSections.style.display = '';
+    } else {
+        configSections.style.display = 'none';
+    }
+}
+
+if (urlInput) {
+    urlInput.addEventListener('input', toggleConfigSections);
+    urlInput.addEventListener('blur', toggleConfigSections);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    toggleConfigSections();
 });

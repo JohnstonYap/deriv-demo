@@ -155,8 +155,8 @@ body {
 
 /* URL Input Section */
 .url-input-section {
-    margin-bottom: 40px;
-    padding-bottom: 40px;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
     border-bottom: 2px solid var(--bg-light);
 }
 
@@ -295,6 +295,26 @@ body {
 /* Input Groups */
 .input-group {
     margin-bottom: 16px;
+}
+
+/* Pop-in animation for resolution reveal */
+.input-group.pop-in {
+    animation: popIn 320ms cubic-bezier(.2,.85,.32,1) both;
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+    60% {
+        opacity: 1;
+        transform: translateY(0) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .input-group label {
