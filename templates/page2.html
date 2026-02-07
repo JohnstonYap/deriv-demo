@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QB Bot - Configure Test</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container wide">
+        <!-- Logo -->
+        <div class="logo-section-small">
+            <div class="logo-icon-small">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QB Bot Logo" class="logo-image-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                    <path d="M30 5L35 15L45 10L40 20L50 25L40 30L45 40L35 35L30 45L25 35L15 40L20 30L10 25L20 20L15 10L25 15L30 5Z" fill="#fbbf24"/>
+                </svg>
+            </div>
+            <span class="logo-text-small">QB Bot</span>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-step completed">
+                <span class="step-number">✓</span>
+                <span class="step-label">Configure</span>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step active">
+                <span class="step-number">2</span>
+                <span class="step-label">Select Tests</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step">
+                <span class="step-number">3</span>
+                <span class="step-label">Results</span>
+            </div>
+        </div>
+
+        <!-- URL Display -->
+        <div class="url-badge">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M8 0L10 6L16 8L10 10L8 16L6 10L0 8L6 6L8 0Z" fill="currentColor"/>
+            </svg>
+            <span>{{ url }}</span>
+        </div>
+
+        <form action="{{ url_for('run_tests') }}" method="POST" id="testsForm">
+            
+            <!-- 1. Test Scope -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-number">01</span>
+                    <h2>Test Scope</h2>
+                </div>
+                
+                <div class="checkbox-grid">
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="test_scope" value="Layout & visual consistency">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Layout & Visual Consistency</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="test_scope" value="Responsiveness">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Responsiveness</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="test_scope" value="Accessibility">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Accessibility</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="test_scope" value="Navigation & user flow">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Navigation & User Flow</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="test_scope" value="Micro-interactions & animations">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Micro-interactions & Animations</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="test_scope" value="Error states & empty states">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Error States & Empty States</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- 2. UI Consistency Checklist -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-number">02</span>
+                    <h2>UI Consistency Checklist</h2>
+                </div>
+                
+                <div class="checkbox-grid">
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="ui_checklist" value="Color usage matches design">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Color Usage Matches Design</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="ui_checklist" value="Typography consistent">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Typography Consistent</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="ui_checklist" value="Spacing & alignment correct">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Spacing & Alignment Correct</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="ui_checklist" value="Icons & imagery consistent">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Icons & Imagery Consistent</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="ui_checklist" value="Branding applied correctly">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Branding Applied Correctly</span>
+                    </label>
+                </div>
+
+                <!-- Custom UI Requirements -->
+                <div class="custom-section">
+                    <div class="custom-header">
+                        <h3>Custom UI Requirements</h3>
+                    </div>
+                    <p class="custom-note">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display: inline; margin-right: 6px;">
+                            <path d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 10.5c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75zM7.75 7.5h-1.5v-4h1.5v4z" fill="currentColor"/>
+                        </svg>
+                        Leave blank if you don't need custom requirements checked
+                    </p>
+                    <div id="customUIContainer">
+                        <div class="custom-row">
+                            <input type="text" name="custom_ui_name[]" placeholder="Requirement Name" class="custom-input" />
+                            <input type="text" name="custom_ui_desc[]" placeholder="AI Description (e.g., 'Check header logo alignment on mobile')" class="custom-input-desc" />
+                            <button type="button" class="btn-remove" onclick="removeRow(this)" style="visibility: hidden;">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. UX Flow & Usability -->
+            <div class="section-card">
+                <div class="section-header">
+                    <span class="section-number">03</span>
+                    <h2>UX Flow & Usability</h2>
+                </div>
+                
+                <div class="checkbox-grid">
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="ux_flows" value="Sign up flow">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Sign Up Flow</span>
+                    </label>
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="ux_flows" value="Login flow">
+                        <span class="checkbox-custom"></span>
+                        <span class="checkbox-label">Login Flow</span>
+                    </label>
+                </div>
+
+                <!-- Custom UX Flows -->
+                <div class="custom-section">
+                    <div class="custom-header">
+                        <h3>Custom UX Flows</h3>
+                    </div>
+                    <p class="custom-note">
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display: inline; margin-right: 6px;">
+                            <path d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 10.5c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75zM7.75 7.5h-1.5v-4h1.5v4z" fill="currentColor"/>
+                        </svg>
+                        Leave blank if you don't need custom flows checked
+                    </p>
+                    <div id="customUXContainer">
+                        <div class="custom-row">
+                            <input type="text" name="custom_ux_name[]" placeholder="Flow Name" class="custom-input" />
+                            <input type="text" name="custom_ux_desc[]" placeholder="AI Description (e.g., 'Test checkout process from cart to confirmation')" class="custom-input-desc" />
+                            <button type="button" class="btn-remove" onclick="removeRow(this)" style="visibility: hidden;">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                    <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{{ url_for('reset') }}" class="btn btn-secondary">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Back</span>
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <span>Run Tests</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M5 10L8 13L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/page2.js') }}"></script>
+</body>
+</html>

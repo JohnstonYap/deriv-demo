@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QB Bot - Test Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container wide">
+        <!-- Logo -->
+        <div class="logo-section-small">
+            <div class="logo-icon-small">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QB Bot Logo" class="logo-image-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                    <path d="M30 5L35 15L45 10L40 20L50 25L40 30L45 40L35 35L30 45L25 35L15 40L20 30L10 25L20 20L15 10L25 15L30 5Z" fill="#fbbf24"/>
+                </svg>
+            </div>
+            <span class="logo-text-small">QB Bot</span>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-step completed">
+                <span class="step-number">✓</span>
+                <span class="step-label">Configure</span>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step completed">
+                <span class="step-number">✓</span>
+                <span class="step-label">Select Tests</span>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step active">
+                <span class="step-number">3</span>
+                <span class="step-label">Results</span>
+            </div>
+        </div>
+
+        <!-- Performance Score -->
+        <div class="performance-score-section">
+            <div class="score-container">
+                <svg class="score-circle" width="200" height="200">
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="#fef3c7" stroke-width="12"/>
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="#10b981" stroke-width="12" 
+                            stroke-dasharray="{{ (results.overall_score / 100) * 565.49 }} 565.49" 
+                            transform="rotate(-90 100 100)" 
+                            stroke-linecap="round"/>
+                </svg>
+                <div class="score-content">
+                    <div class="score-value">{{ results.overall_score }}</div>
+                    <div class="score-label">Performance Score</div>
+                </div>
+            </div>
+            <div class="score-details">
+                <p class="score-description">Testing on: {{ results.config.environment }} • {{ results.config.resolution }}</p>
+                <p class="score-url">{{ results.url }}</p>
+            </div>
+        </div>
+
+        <!-- Performance Metrics -->
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">First Contentful Paint (FCP)</div>
+                <div class="metric-value">{{ results.fcp }} s</div>
+                <div class="metric-bar">
+                    <div class="metric-progress" style="width: {{ min(100, (results.fcp / 3.0) * 100) }}%; background: {% if results.fcp < 1.8 %}#10b981{% elif results.fcp < 3.0 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+                </div>
+                <div class="metric-range">
+                    <span>0s</span>
+                    <span>1.8s</span>
+                    <span>3.0s</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Page Load</div>
+                <div class="metric-value">{{ results.page_load }} s</div>
+                <div class="metric-bar">
+                    <div class="metric-progress" style="width: {{ min(100, (results.page_load / 5.0) * 100) }}%; background: {% if results.page_load < 2.5 %}#10b981{% elif results.page_load < 4.0 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+                </div>
+                <div class="metric-range">
+                    <span>0s</span>
+                    <span>2.5s</span>
+                    <span>5.0s</span>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-label">Speed Index</div>
+                <div class="metric-value">{{ results.speed_index }} s</div>
+                <div class="metric-bar">
+                    <div class="metric-progress" style="width: {{ min(100, (results.speed_index / 2.5) * 100) }}%; background: {% if results.speed_index < 1.3 %}#10b981{% elif results.speed_index < 2.3 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+                </div>
+                <div class="metric-range">
+                    <span>0s</span>
+                    <span>1.3s</span>
+                    <span>2.3s</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card stat-total">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5M12 12H15M12 16H15M9 12H9.01M9 16H9.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ results.test_results | length }}</div>
+                    <div class="stat-label">Total Tests</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-pass">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ results.test_results | selectattr('status', 'equalto', 'pass') | list | length }}</div>
+                    <div class="stat-label">Passed</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-fail">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M10 14L12 12M12 12L14 10M12 12L10 10M12 12L14 14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ results.test_results | selectattr('status', 'equalto', 'fail') | list | length }}</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+            </div>
+
+            <div class="stat-card stat-warning">
+                <div class="stat-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-number">{{ results.test_results | selectattr('status', 'equalto', 'warning') | list | length }}</div>
+                    <div class="stat-label">Warnings</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test Results by Category -->
+        <div class="results-container">
+            {% set categories = {} %}
+            {% for result in results.test_results %}
+                {% set _ = categories.update({result.category: categories.get(result.category, []) + [result]}) %}
+            {% endfor %}
+
+            {% for category, items in categories.items() %}
+            <div class="results-section">
+                <h3 class="category-title">{{ category }}</h3>
+                <div class="results-grid">
+                    {% for item in items %}
+                    <div class="result-card status-{{ item.status }}">
+                        <div class="result-header">
+                            <h4>{{ item.name }}</h4>
+                            <span class="status-badge status-{{ item.status }}">
+                                {% if item.status == 'pass' %}
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M5 8L7 10L11 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Passed
+                                {% elif item.status == 'fail' %}
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M5 5L11 11M5 11L11 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Failed
+                                {% else %}
+                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                        <path d="M8 4V9M8 12H8.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                    </svg>
+                                    Warning
+                                {% endif %}
+                            </span>
+                        </div>
+                        <p class="result-details">{{ item.details }}</p>
+                        {% if item.ai_context %}
+                        <div class="ai-context">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <path d="M7 1L8.5 5.5L13 7L8.5 8.5L7 13L5.5 8.5L1 7L5.5 5.5L7 1Z" fill="currentColor"/>
+                            </svg>
+                            <span>AI Context: {{ item.ai_context }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="{{ url_for('reset') }}" class="btn btn-secondary">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M4 10H16M4 10L8 6M4 10L8 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>New Test</span>
+            </a>
+            <a href="{{ url_for('download_results') }}" class="btn btn-primary">
+                <span>Download Results</span>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M10 3V13M10 13L6 9M10 13L14 9M4 17H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</body>
+</html>
