@@ -549,7 +549,26 @@ body {
 .report-title {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: clamp(8px, 2vw, 12px);
+    text-decoration: none;  
+    color: inherit;
+    min-width: 0;
+    max-width: 100%;
+    text-decoration: none;
+}
+
+.logo-link {
+    display: flex;
+    text-decoration: none;
+    color: inherit;
+}
+
+.logo-link img {
+    cursor: pointer;
+}
+
+.logo-link:hover img {
+    opacity: 0.9;
 }
 
 .report-title h1 {
@@ -560,6 +579,7 @@ body {
     -webkit-text-fill-color: transparent;
     text-transform: uppercase;
     letter-spacing: -1px;
+    white-space: nowrap;
 }
 
 .overall-score-badge {

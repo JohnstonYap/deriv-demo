@@ -245,7 +245,9 @@
         <div class="dashboard-header">
             <div class="header-top">
                 <div class="report-title">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" width="40" height="40" alt="QB Bot">
+                    <a href="/" class="logo-link">
+                        <img src="{{ url_for('static', filename='images/logo.png') }}" width="40" height="40" alt="QB Bot">
+                    </a>
                     <h1>Testing Report</h1>
                 </div>
                 <div class="overall-score-badge">
@@ -272,7 +274,7 @@
                 <div class="info-item">
                     <span class="info-label">URL</span>
                     <span class="info-value url-copyable" onclick="copyURL('{{ results.url }}')" title="Click to copy">
-                        {{ results.url[:25] }}{% if results.url|length > 25 %}...{% endif %}
+                        {{ results.url[:20] }}{% if results.url|length > 20 %}...{% endif %}
                     </span>
                 </div>
                 <div class="info-item">
