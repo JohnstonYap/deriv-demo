@@ -271,7 +271,7 @@
                 <div class="info-item">
                     <span class="info-label">URL</span>
                     <span class="info-value url-copyable" onclick="copyURL('{{ results.url }}')" title="Click to copy">
-                        {{ results.url[:50] }}{% if results.url|length > 50 %}...{% endif %}
+                        {{ results.url[:25] }}{% if results.url|length > 25 %}...{% endif %}
                     </span>
                 </div>
                 <div class="info-item">
