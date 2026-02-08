@@ -455,6 +455,10 @@ body {
     border: 2px solid var(--border-light);
     border-radius: 12px;
     transition: all 0.2s ease;
+
+    /* 🔑 important */
+    max-width: 100%;
+    overflow: hidden;
 }
 
 .history-item:hover {
@@ -485,12 +489,16 @@ body {
 
 .history-details {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     min-width: 0;
     overflow: hidden;
 }
 
 .history-url {
-    font-size: 14px;
+    font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+    min-width: 0;
     font-weight: 700;
     max-width: 100%;
     overflow: hidden;
@@ -499,12 +507,17 @@ body {
 }
 
 .history-meta {
-    display: flex;
-    flex-wrap: wrap;
     gap: 12px;
-    font-size: 12px;
+    align-items: center;
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
     color: var(--text-medium);
     font-family: var(--font-mono);
+    
+    max-width: 100%;
+}
+
+.history-meta span:nth-child(even) {
+    opacity: 0.6;
 }
 
 /* ===== PAGE 2: DASHBOARD RESULTS ===== */
@@ -1251,6 +1264,11 @@ body {
     .rating-grid {
         grid-template-columns: 1fr;
     }
+
+    .history-meta {
+        font-size: 0.8rem;
+        gap: 4px 8px;
+    }
 }
 
 /* Mobile Portrait (max-width: 480px) */
@@ -1258,6 +1276,17 @@ body {
     .landing-container,
     .dashboard-container {
         padding: 30px 12px;
+    }
+
+    .score-number {
+        position: absolute;
+        top: 60%;
+        left: 60%;
+    }
+
+    .history-meta {
+        font-size: 0.8rem;
+        gap: 4px 8px;
     }
     
     .hero-section {
@@ -1369,8 +1398,10 @@ body {
     }
     
     .history-item {
-        flex-direction: column;
         align-items: flex-start;
+        /* 🔑 important */
+        max-width: 100%;
+        overflow: hidden;
     }
     
     .history-score {
@@ -1380,6 +1411,34 @@ body {
     
     .score-number {
         font-size: 16px;
+    }
+
+    .history-details {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 0;
+        overflow: hidden;
+    }
+
+    .history-url {
+        font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+        min-width: 0;
+        font-weight: 700;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .history-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        font-size: clamp(0.7rem, 2vw, 0.85rem);
+        color: var(--text-medium);
+        font-family: var(--font-mono);
     }
 }
 
