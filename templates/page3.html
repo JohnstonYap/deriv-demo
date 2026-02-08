@@ -5,253 +5,872 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QB Bot - Test Results</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* URL Copy Styling */
+        .url-copyable {
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+            border-bottom: 2px dotted var(--primary-orange);
+        }
+        
+        .url-copyable:hover {
+            color: var(--primary-orange);
+            border-bottom-style: solid;
+        }
+        
+        .url-copyable:active {
+            transform: scale(0.98);
+        }
+        
+        /* Charts Container */
+        .charts-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-card {
+            background: white;
+            border: 3px solid var(--border-light);
+            border-radius: 24px;
+            padding: 32px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-orange) 0%, var(--dark-orange) 100%);
+        }
+        
+        .chart-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        @media (max-width: 968px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.6s ease;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            font-family: var(--font-mono);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+        .step-circle.completed {
+            background: var(--success);
+            color: white;
+        }
+        .step-circle.active {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--dark-orange) 100%);
+            color: white;
+            box-shadow: 0 0 0 6px rgba(255, 115, 0, 0.2);
+        }
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-family: var(--font-mono);
+            white-space: nowrap;
+        }
+        .step-arrow {
+            color: var(--border-light);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+        
+        /* Responsive table - hide Expected and Actual columns on mobile */
+        @media (max-width: 768px) {
+            .test-table th:nth-child(2),
+            .test-table th:nth-child(3),
+            .test-table td:nth-child(2),
+            .test-table td:nth-child(3) {
+                display: none;
+            }
+            
+            /* Adjust table layout for mobile */
+            .test-table th:nth-child(1),
+            .test-table td:nth-child(1) {
+                width: 60%;
+            }
+            
+            .test-table th:nth-child(4),
+            .test-table td:nth-child(4) {
+                width: 40%;
+                text-align: right;
+            }
+            
+            /* Make scenario text smaller on mobile */
+            .test-table td:nth-child(1) {
+                font-size: 13px;
+            }
+            
+            /* Make status badges more compact */
+            .status-badge {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+        }
+        
+        @media (max-width: 968px) {
+            .progress-indicator {
+                gap: 8px;
+            }
+            .step-circle {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+            .step-label {
+                font-size: 13px;
+            }
+            .step-arrow {
+                font-size: 18px;
+            }
+        }
+        @media (max-width: 480px) {
+            .progress-indicator {
+                gap: 6px;
+            }
+            .step-circle {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+            .step-label {
+                font-size: 11px;
+            }
+            .step-arrow {
+                font-size: 16px;
+            }
+            .step-circle.active {
+                box-shadow: 0 0 0 4px rgba(255, 115, 0, 0.2);
+            }
+            
+            /* Further optimize table for very small screens */
+            .test-table th:nth-child(1),
+            .test-table td:nth-child(1) {
+                width: 55%;
+            }
+            
+            .test-table th:nth-child(4),
+            .test-table td:nth-child(4) {
+                width: 45%;
+            }
+            
+            .test-table td:nth-child(1) {
+                font-size: 12px;
+            }
+            
+            .status-badge {
+                font-size: 10px;
+                padding: 3px 6px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <a href="/" class="logo-link">
-            <div class="logo-section-small">
-                <div class="logo-icon-small">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QB Bot Logo" class="logo-image-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                        <path d="M30 5L35 15L45 10L40 20L50 25L40 30L45 40L35 35L30 45L25 35L15 40L20 30L10 25L20 20L15 10L25 15L30 5Z" fill="#fbbf24"/>
-                    </svg>
-                </div>
-                <span class="logo-text-small">QB Bot</span>
+    <div class="dashboard-container">
+        <!-- Progress Indicator -->
+        <div class="progress-indicator">
+            <div class="progress-step">
+                <div class="step-circle completed">✓</div>
+                <span class="step-label">URL Input</span>
             </div>
-        </a>
-    </nav>
-
-    <div class="container wide">
-        <!-- Loading Progress State -->
-        <div id="loadingState" class="loading-state-container">
-            <div class="loading-progress">
-                <div class="progress-circle-wrapper">
-                    <svg class="score-circle" width="100%" height="100%" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-                        <circle cx="100" cy="100" r="90" fill="none" stroke="#fef3c7" stroke-width="12"/>
-                        <circle class="progress-ring" cx="100" cy="100" r="90" fill="none" stroke="#10b981" stroke-width="12"
-                                transform="rotate(180 100 100)" stroke-linecap="round"></circle>
-                    </svg>
-                </div>
-                <div class="test-items-list">
-                    {% set test_categories = [] %}
-                    {% for result in results.test_results %}
-                        {% if result.category not in test_categories %}
-                            {% set _ = test_categories.append(result.category) %}
-                        {% endif %}
-                    {% endfor %}
-                    {% for category in test_categories %}
-                    <div class="test-item" data-status="waiting">
-                        <span class="test-name">{{ category }}</span>
-                        <span class="test-status">Waiting</span>
-                    </div>
-                    {% endfor %}
-                </div>
+            <span class="step-arrow">→</span>
+            <div class="progress-step">
+                <div class="step-circle completed">✓</div>
+                <span class="step-label">Configure</span>
+            </div>
+            <span class="step-arrow">→</span>
+            <div class="progress-step">
+                <div class="step-circle active">3</div>
+                <span class="step-label">Results</span>
             </div>
         </div>
 
-        <!-- Results State (Hidden until loading completes) -->
-        <div id="resultsState" style="display: none;">
-            <!-- Progress Indicator -->
-            <div class="progress-indicator">
-                <div class="progress-step completed">
-                    <span class="step-number">✓</span>
-                    <span class="step-label">Configure</span>
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+            <div class="header-top">
+                <div class="report-title">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" width="40" height="40" alt="QB Bot">
+                    <h1>Testing Report</h1>
                 </div>
-                <div class="progress-line active"></div>
-                <div class="progress-step completed">
-                    <span class="step-number">✓</span>
-                    <span class="step-label">Select Tests</span>
-                </div>
-                <div class="progress-line active"></div>
-                <div class="progress-step active">
-                    <span class="step-number">3</span>
-                    <span class="step-label">Results</span>
-                </div>
-            </div>
-
-            <!-- Performance Score -->
-            <div class="performance-score-section">
-                <div class="score-container">
-                    <svg class="score-circle" width="100%" height="100%" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-                        <circle cx="100" cy="100" r="90" fill="none" stroke="#fef3c7" stroke-width="12"/>
-                        <!-- progress ring: start from west (9 o'clock) -->
-                        <circle class="progress-ring" cx="100" cy="100" r="90" fill="none" stroke="#10b981" stroke-width="12"
-                                transform="rotate(180 100 100)" stroke-linecap="round"></circle>
-                    </svg>
-                    <div class="score-content">
+                <div class="overall-score-badge">
+                    <div class="score-circle">
+                        <svg width="70" height="70" viewBox="0 0 70 70">
+                            <circle cx="35" cy="35" r="30" fill="none" stroke="#fef3c7" stroke-width="5"/>
+                            <circle cx="35" cy="35" r="30" fill="none" 
+                                    stroke="{% if results.overall_score >= 85 %}#10b981{% elif results.overall_score >= 70 %}#f59e0b{% else %}#ef4444{% endif %}" 
+                                    stroke-width="5" 
+                                    stroke-dasharray="{{ (results.overall_score / 100) * 188.5 }} 188.5" 
+                                    transform="rotate(-90 35 35)" 
+                                    stroke-linecap="round"/>
+                        </svg>
                         <div class="score-value">{{ results.overall_score }}</div>
-                        <div class="score-label">Performance Score</div>
+                    </div>
+                    <div class="score-details">
+                        <span>Overall Score</span>
+                        <strong>Grade {{ results.grade }}</strong>
                     </div>
                 </div>
-                <div class="score-details">
-                    <p class="score-description">Testing on: {{ results.config.environment }} • {{ results.config.resolution }}</p>
-                    <p class="score-url">{{ results.url }}</p>
-                </div>
             </div>
-
-        <!-- Performance Metrics -->
-        <div class="metrics-grid">
-            <div class="metric-card">
-                <div class="metric-label">First Contentful Paint (FCP)</div>
-                <div class="metric-value">{{ results.fcp }} s</div>
-                <div class="metric-bar">
-                    <div class="metric-progress" style="width: {{ min(100, (results.fcp / 3.0) * 100) }}%; background: {% if results.fcp < 1.8 %}#10b981{% elif results.fcp < 3.0 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+            
+            <div class="header-info">
+                <div class="info-item">
+                    <span class="info-label">URL</span>
+                    <span class="info-value url-copyable" onclick="copyURL('{{ results.url }}')" title="Click to copy">
+                        {{ results.url[:50] }}{% if results.url|length > 50 %}...{% endif %}
+                    </span>
                 </div>
-                <div class="metric-range">
-                    <span>0s</span>
-                    <span>1.8s</span>
-                    <span>3.0s</span>
+                <div class="info-item">
+                    <span class="info-label">Test Date</span>
+                    <span class="info-value">{{ results.test_date }}</span>
                 </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">Page Load</div>
-                <div class="metric-value">{{ results.page_load }} s</div>
-                <div class="metric-bar">
-                    <div class="metric-progress" style="width: {{ min(100, (results.page_load / 5.0) * 100) }}%; background: {% if results.page_load < 2.5 %}#10b981{% elif results.page_load < 4.0 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+                <div class="info-item">
+                    <span class="info-label">Device</span>
+                    <span class="info-value">{{ results.device }} • {{ results.resolution }}</span>
                 </div>
-                <div class="metric-range">
-                    <span>0s</span>
-                    <span>2.5s</span>
-                    <span>5.0s</span>
+                <div class="info-item">
+                    <span class="info-label">Browser</span>
+                    <span class="info-value">{{ results.browser }}</span>
                 </div>
-            </div>
-
-            <div class="metric-card">
-                <div class="metric-label">Speed Index</div>
-                <div class="metric-value">{{ results.speed_index }} s</div>
-                <div class="metric-bar">
-                    <div class="metric-progress" style="width: {{ min(100, (results.speed_index / 2.5) * 100) }}%; background: {% if results.speed_index < 1.3 %}#10b981{% elif results.speed_index < 2.3 %}#f59e0b{% else %}#ef4444{% endif %};"></div>
+                <div class="info-item">
+                    <span class="info-label">Tester Level</span>
+                    <span class="info-value">{{ results.tester_level }}</span>
                 </div>
-                <div class="metric-range">
-                    <span>0s</span>
-                    <span>1.3s</span>
-                    <span>2.3s</span>
+                <div class="info-item">
+                    <span class="info-label">Language</span>
+                    <span class="info-value">{{ results.language }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Statistics Cards -->
-
-        <!-- Statistics Cards -->
-        <div class="stats-grid">
-            <div class="stat-card stat-total">
-                <div class="stat-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5M12 12H15M12 16H15M9 12H9.01M9 16H9.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon success">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
                     </svg>
                 </div>
-                <div class="stat-content">
-                    <div class="stat-number">{{ results.test_results | length }}</div>
-                    <div class="stat-label">Total Tests</div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Passed</div>
+                    <div class="kpi-value">{{ results.passed_tests }}</div>
                 </div>
             </div>
 
-            <div class="stat-card stat-pass">
-                <div class="stat-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="kpi-card">
+                <div class="kpi-icon error">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M10 14L12 12M12 12L14 10M12 12L10 10M12 12L14 14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
                     </svg>
                 </div>
-                <div class="stat-content">
-                    <div class="stat-number">{{ results.test_results | selectattr('status', 'equalto', 'pass') | list | length }}</div>
-                    <div class="stat-label">Passed</div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Failed</div>
+                    <div class="kpi-value">{{ results.failed_tests }}</div>
                 </div>
             </div>
 
-            <div class="stat-card stat-fail">
-                <div class="stat-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M10 14L12 12M12 12L14 10M12 12L10 10M12 12L14 14M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="kpi-card">
+                <div class="kpi-icon warning">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
                     </svg>
                 </div>
-                <div class="stat-content">
-                    <div class="stat-number">{{ results.test_results | selectattr('status', 'equalto', 'fail') | list | length }}</div>
-                    <div class="stat-label">Failed</div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Warnings</div>
+                    <div class="kpi-value">{{ results.warning_tests }}</div>
                 </div>
             </div>
 
-            <div class="stat-card stat-warning">
-                <div class="stat-icon">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                        <path d="M12 9V13M12 17H12.01M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <div class="kpi-card">
+                <div class="kpi-icon info">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5"/>
                     </svg>
                 </div>
-                <div class="stat-content">
-                    <div class="stat-number">{{ results.test_results | selectattr('status', 'equalto', 'warning') | list | length }}</div>
-                    <div class="stat-label">Warnings</div>
+                <div class="kpi-content">
+                    <div class="kpi-label">Total</div>
+                    <div class="kpi-value">{{ results.total_tests }}</div>
                 </div>
             </div>
         </div>
 
-        <!-- Test Results by Category -->
-        <div class="results-container">
-            {% set categories = {} %}
-            {% for result in results.test_results %}
-                {% set _ = categories.update({result.category: categories.get(result.category, []) + [result]}) %}
-            {% endfor %}
+        <!-- Charts Section -->
+        <div class="charts-section">
+            <!-- Test Results Distribution (Doughnut Chart) -->
+            <div class="chart-card">
+                <h3 class="chart-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2v10l7 7"/>
+                    </svg>
+                    Test Results Distribution
+                </h3>
+                <div class="chart-container">
+                    <canvas id="doughnutChart"></canvas>
+                </div>
+            </div>
 
-            {% for category, items in categories.items() %}
-            <div class="results-section">
-                <h3 class="category-title">{{ category }}</h3>
-                <div class="results-grid">
-                    {% for item in items %}
-                    <div class="result-card status-{{ item.status }}">
-                        <div class="result-header">
-                            <h4>{{ item.name }}</h4>
-                            <span class="status-badge status-{{ item.status }}">
-                                {% if item.status == 'pass' %}
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path d="M5 8L7 10L11 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    Passed
-                                {% elif item.status == 'fail' %}
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path d="M5 5L11 11M5 11L11 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                    Failed
-                                {% else %}
-                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                                        <path d="M8 4V9M8 12H8.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                    </svg>
-                                    Warning
-                                {% endif %}
-                            </span>
-                        </div>
-                        <p class="result-details">{{ item.details }}</p>
-                        {% if item.ai_context %}
-                        <div class="ai-context">
-                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                <path d="M7 1L8.5 5.5L13 7L8.5 8.5L7 13L5.5 8.5L1 7L5.5 5.5L7 1Z" fill="currentColor"/>
-                            </svg>
-                            <span>AI Context: {{ item.ai_context }}</span>
-                        </div>
+            <!-- Test Trends (Bar Chart) -->
+            <div class="chart-card">
+                <h3 class="chart-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"/>
+                        <path d="M18 17V9"/>
+                        <path d="M13 17V5"/>
+                        <path d="M8 17v-3"/>
+                    </svg>
+                    Test Category Breakdown
+                </h3>
+                <div class="chart-container">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Grid -->
+        <div class="dashboard-grid">
+            <!-- UX Flow & Usability -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 2L12 8L18 10L12 12L10 18L8 12L2 10L8 8L10 2Z"/>
+                        </svg>
+                        UX Flow & Usability
+                    </h3>
+                    <span class="card-badge">{{ results.ux_flows|length }} Tests</span>
+                </div>
+                
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Scenario</th>
+                            <th>Expected</th>
+                            <th>Actual</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for flow in results.ux_flows %}
+                        <tr>
+                            <td>{{ flow.scenario }}</td>
+                            <td>{{ flow.expected }}</td>
+                            <td>{{ flow.actual }}</td>
+                            <td>
+                                <span class="status-badge {{ flow.status }}">
+                                    {% if flow.status == 'pass' %}
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M2 6L5 9L10 3"/>
+                                        </svg>
+                                        Pass
+                                    {% elif flow.status == 'fail' %}
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M3 3L9 9M3 9L9 3"/>
+                                        </svg>
+                                        Fail
+                                    {% else %}
+                                        <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M6 3V6M6 9H6.01"/>
+                                        </svg>
+                                        Warning
+                                    {% endif %}
+                                </span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Responsiveness & Layout -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 4H17M3 10H17M3 16H17"/>
+                        </svg>
+                        Responsiveness
+                    </h3>
+                    <span class="card-badge">{{ results.responsiveness|length }} Devices</span>
+                </div>
+
+                {% for resp in results.responsiveness %}
+                <div class="progress-item">
+                    <div class="progress-header">
+                        <span class="progress-label">{{ resp.device }}</span>
+                        <span class="progress-value">{{ resp.percentage }}%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill {% if resp.percentage >= 85 %}success{% elif resp.percentage >= 70 %}warning{% else %}error{% endif %}" 
+                             style="width: {{ resp.percentage }}%;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Test Scope Coverage -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12L11 14L15 10M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z"/>
+                        </svg>
+                        Test Scope
+                    </h3>
+                    <span class="card-badge">{{ results.test_scope|length }} Areas</span>
+                </div>
+
+                {% for scope in results.test_scope %}
+                <div class="checklist-item">
+                    <div class="checkbox-icon {% if scope.checked %}checked{% else %}unchecked{% endif %}">
+                        {% if scope.checked %}
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M3 7L6 10L11 4"/>
+                        </svg>
                         {% endif %}
                     </div>
+                    <span class="checklist-text">{{ scope.name }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- UI Consistency Checklist -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 6H16M4 10H16M4 14H16"/>
+                        </svg>
+                        UI Consistency
+                    </h3>
+                    <span class="card-badge">
+                        {{ (results.ui_consistency|selectattr('status', 'equalto', 'pass')|list|length / results.ui_consistency|length * 100)|int }}% Pass
+                    </span>
+                </div>
+
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Status</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in results.ui_consistency %}
+                        <tr>
+                            <td>{{ item.item }}</td>
+                            <td><span class="status-badge {{ item.status }}">{{ item.status|title }}</span></td>
+                            <td>{{ item.notes }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Accessibility Compliance -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="10" cy="10" r="8"/>
+                            <path d="M10 6V10L13 13"/>
+                        </svg>
+                        Accessibility
+                    </h3>
+                    <span class="card-badge">
+                        {{ results.accessibility|selectattr('checked')|list|length }}/{{ results.accessibility|length }} Passed
+                    </span>
+                </div>
+
+                {% for item in results.accessibility %}
+                <div class="checklist-item">
+                    <div class="checkbox-icon {% if item.checked %}checked{% else %}unchecked{% endif %}">
+                        {% if item.checked %}
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <path d="M3 7L6 10L11 4"/>
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <span class="checklist-text">{{ item.item }}</span>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Interaction & Feedback -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M15 10L10 15L5 10M15 5L10 10L5 5"/>
+                        </svg>
+                        Interaction
+                    </h3>
+                    <span class="card-badge">{{ results.interactions|length }} Elements</span>
+                </div>
+
+                <table class="test-table">
+                    <thead>
+                        <tr>
+                            <th>Element</th>
+                            <th>Expected</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in results.interactions %}
+                        <tr>
+                            <td>{{ item.element }}</td>
+                            <td>{{ item.expected }}</td>
+                            <td><span class="status-badge {{ item.result }}">{{ item.result|title }}</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Issues & Defects -->
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 6V10M10 14H10.01M19 10C19 14.9706 14.9706 19 10 19C5.02944 19 1 14.9706 1 10C1 5.02944 5.02944 1 10 1C14.9706 1 19 5.02944 19 10Z"/>
+                        </svg>
+                        Issues & Defects
+                    </h3>
+                    <span class="card-badge">{{ results.issues|length }} Found</span>
+                </div>
+
+                {% if results.issues %}
+                    {% for issue in results.issues %}
+                    <div class="issue-card">
+                        <div class="issue-header">
+                            <span class="issue-id">{{ issue.id }}</span>
+                            <span class="severity-badge {{ issue.severity }}">{{ issue.severity }}</span>
+                        </div>
+                        <div class="issue-description">{{ issue.description }}</div>
+                        <div class="issue-meta">
+                            <span>Type: {{ issue.type }}</span>
+                            <span>•</span>
+                            <span>Steps: {{ issue.steps }}</span>
+                        </div>
+                    </div>
                     {% endfor %}
+                {% else %}
+                    <div style="text-align: center; padding: 40px; color: var(--text-medium);">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin: 0 auto 16px; display: block; color: var(--success);">
+                            <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z"/>
+                        </svg>
+                        <p style="font-size: 16px; font-weight: 600;">No issues found! Everything looks good.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Overall Assessment -->
+            <div class="dashboard-card full-width">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10 1L12 7L18 9L12 11L10 17L8 11L2 9L8 7L10 1Z"/>
+                        </svg>
+                        Overall Assessment
+                    </h3>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;">
+                    <div>
+                        <div class="star-rating">
+                            <span class="rating-label">UI Quality:</span>
+                            <div class="stars">
+                                {% for i in range(5) %}
+                                <svg class="star {% if i >= results.ui_quality %}empty{% endif %}" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                                {% endfor %}
+                            </div>
+                            <span class="rating-score">{{ results.ui_quality }}/5.0</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="star-rating">
+                            <span class="rating-label">UX Quality:</span>
+                            <div class="stars">
+                                {% for i in range(5) %}
+                                <svg class="star {% if i >= results.ux_quality %}empty{% endif %}" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+                                </svg>
+                                {% endfor %}
+                            </div>
+                            <span class="rating-score">{{ results.ux_quality }}/5.0</span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
 
         <!-- Action Buttons -->
         <div class="action-buttons">
             <a href="{{ url_for('reset') }}" class="btn btn-secondary">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M4 10H16M4 10L8 6M4 10L8 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M4 10H16M4 10L8 6M4 10L8 14"/>
                 </svg>
-                <span>New Test</span>
+                New Test
             </a>
             <a href="{{ url_for('download_results') }}" class="btn btn-primary">
-                <span>Download Results</span>
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M10 3V13M10 13L6 9M10 13L14 9M4 17H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                Download Results
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M10 3V13M10 13L6 9M10 13L14 9M4 17H16"/>
                 </svg>
             </a>
         </div>
     </div>
-    </div>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    
+    <script>
+        // Copy URL Function
+        function copyURL(url) {
+            navigator.clipboard.writeText(url).then(() => {
+                // Show tooltip
+                const element = event.target;
+                const originalTitle = element.getAttribute('title');
+                element.setAttribute('title', 'Copied!');
+                element.style.color = 'var(--success)';
+                
+                setTimeout(() => {
+                    element.setAttribute('title', originalTitle);
+                    element.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+
+        // Chart Data from Flask
+        const passedTests = {{ results.passed_tests }};
+        const failedTests = {{ results.failed_tests }};
+        const warningTests = {{ results.warning_tests }};
+        const uxFlowsCount = {{ results.ux_flows|length }};
+        const uiConsistencyCount = {{ results.ui_consistency|length }};
+        const interactionsCount = {{ results.interactions|length }};
+
+        // Doughnut Chart - Test Results Distribution
+        const doughnutCtx = document.getElementById('doughnutChart').getContext('2d');
+        const doughnutChart = new Chart(doughnutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Passed', 'Failed', 'Warnings'],
+                datasets: [{
+                    data: [passedTests, failedTests, warningTests],
+                    backgroundColor: [
+                        '#10b981', // Success green
+                        '#ef4444', // Error red
+                        '#f59e0b'  // Warning orange
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 13,
+                                weight: 600
+                            },
+                            padding: 15,
+                            usePointStyle: true,
+                            pointStyle: 'circle'
+                        }
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        titleFont: {
+                            family: "'Work Sans', sans-serif",
+                            size: 14,
+                            weight: 700
+                        },
+                        bodyFont: {
+                            family: "'Work Sans', sans-serif",
+                            size: 13,
+                            weight: 500
+                        },
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: true,
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed || 0;
+                                const total = passedTests + failedTests + warningTests;
+                                const percentage = ((value / total) * 100).toFixed(1);
+                                return ` ${label}: ${value} (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                cutout: '65%',
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 1500,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
+
+        // Bar Chart - Test Category Breakdown
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        const barChart = new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: ['UX Flow', 'UI Consistency', 'Interactions'],
+                datasets: [{
+                    label: 'Tests Conducted',
+                    data: [uxFlowsCount, uiConsistencyCount, interactionsCount],
+                    backgroundColor: [
+                        'rgba(255, 115, 0, 0.8)', // Orange
+                        'rgba(0, 16, 84, 0.8)', // Blue
+                        'rgba(255, 163, 89, 0.8)' // Light orange
+                    ],
+                    borderColor: [
+                        '#FF7300',
+                        '#001054',
+                        '#FFA559'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(30, 41, 59, 0.95)',
+                        titleFont: {
+                            family: "'Work Sans', sans-serif",
+                            size: 14,
+                            weight: 700
+                        },
+                        bodyFont: {
+                            family: "'Work Sans', sans-serif",
+                            size: 13,
+                            weight: 500
+                        },
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            label: function(context) {
+                                return ` ${context.parsed.y} tests`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                family: "'Space Mono', monospace",
+                                size: 12,
+                                weight: 600
+                            },
+                            color: '#64748b',
+                            stepSize: 1
+                        },
+                        grid: {
+                            color: '#fef3c7',
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 12,
+                                weight: 600
+                            },
+                            color: '#1e293b'
+                        },
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
+    </script>
+
     <script src="{{ url_for('static', filename='js/page3.js') }}"></script>
 </body>
 </html>

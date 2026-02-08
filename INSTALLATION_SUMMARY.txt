@@ -1,0 +1,278 @@
+═══════════════════════════════════════════════════════════════
+  QB BOT - UI/UX INSPECTOR - COMPLETE PACKAGE
+═══════════════════════════════════════════════════════════════
+
+✅ WHAT YOU HAVE
+─────────────────────────────────────────────────────────────────
+📦 Complete Flask web application (15 files)
+🎨 Professional yellow-accent design
+📱 Fully responsive (mobile/tablet/desktop)
+⚡ Dynamic custom flows and UI requirements
+📊 Test results dashboard
+📝 Comprehensive documentation
+
+═══════════════════════════════════════════════════════════════
+  INSTANT START (CHOOSE ONE)
+═══════════════════════════════════════════════════════════════
+
+🪟 WINDOWS USERS:
+   1. Extract ZIP file
+   2. Double-click: run.bat
+   3. Open browser: http://localhost:5000
+
+🍎 MAC/LINUX USERS:
+   1. Extract ZIP file
+   2. Terminal: cd qb-bot-complete
+   3. Run: ./run.sh
+   4. Open browser: http://localhost:5000
+
+💻 MANUAL START:
+   pip install flask
+   python app.py
+
+═══════════════════════════════════════════════════════════════
+  PROJECT STRUCTURE
+═══════════════════════════════════════════════════════════════
+
+qb-bot-complete/
+├── 📄 app.py                  → Backend (Flask)
+├── 📁 templates/
+│   ├── page1.html            → URL Input
+│   ├── page2.html            → Configuration ⭐ NEW
+│   └── page3.html            → Results Dashboard
+├── 📁 static/
+│   ├── css/style.css         → Styling
+│   ├── js/page1.js           → Page 1 interactions
+│   ├── js/page3.js           → Page 3 interactions
+│   └── images/logo.png       → Logo
+├── 📖 README.md              → Basic guide
+├── 📖 PROJECT_GUIDE.md       → Complete technical docs
+├── 📖 QUICK_START.md         → Beginner guide
+├── 📖 FILE_LIST.md           → All files explained
+├── ⚙️ requirements.txt        → Dependencies
+├── 🚀 run.sh                 → Linux/Mac starter
+└── 🚀 run.bat                → Windows starter
+
+═══════════════════════════════════════════════════════════════
+  HOW IT WORKS (3 PAGES)
+═══════════════════════════════════════════════════════════════
+
+PAGE 1: URL Input
+┌─────────────────────────────────────┐
+│ • Enter website URL                 │
+│ • Select environment & browser      │
+│ • Choose language & tester level    │
+│ • View recent test history          │
+└─────────────────────────────────────┘
+              ↓ Click "Run Test"
+
+PAGE 2: Configuration ⭐ NEW FEATURE
+┌─────────────────────────────────────┐
+│ UX Flow & Usability:                │
+│ ☑ Sign up flow                      │
+│ ☑ Login flow                        │
+│ ☑ Custom flow (dynamic rows) ⚡     │
+│                                     │
+│ UI Consistency Checklist:           │
+│ ☑ Color, Typography, Spacing...    │
+│ ☑ Custom Requirement (dynamic) ⚡   │
+└─────────────────────────────────────┘
+         ↓ Click "Continue to Test"
+
+PAGE 3: Results Dashboard
+┌─────────────────────────────────────┐
+│ • Overall score & grade             │
+│ • Test statistics (Pass/Fail/Warn)  │
+│ • UX Flow results (+ custom flows)  │
+│ • UI Consistency (+ custom reqs)    │
+│ • Issues & recommendations          │
+│ • Download / Reset options          │
+└─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+  KEY FEATURES
+═══════════════════════════════════════════════════════════════
+
+✨ DYNAMIC CUSTOM FLOWS
+   → Type flow name → New row appears automatically
+   → Add description for each flow
+   → Delete unwanted rows with X button
+   → Unlimited custom flows
+
+✨ DYNAMIC UI REQUIREMENTS
+   → Type requirement → New row appears automatically
+   → Delete unwanted rows with X button
+   → Unlimited custom requirements
+
+✨ SMART INTEGRATION
+   → Custom flows appear in results dashboard
+   → Custom UI requirements tested and displayed
+   → All data saved in session
+
+✨ PROFESSIONAL DESIGN
+   → Yellow-accent brand theme
+   → Smooth animations
+   → Responsive on all devices
+   → Custom dropdowns and cards
+
+═══════════════════════════════════════════════════════════════
+  DOCUMENTATION GUIDE
+═══════════════════════════════════════════════════════════════
+
+📖 New User?           → Read: QUICK_START.md
+📖 Want Details?       → Read: PROJECT_GUIDE.md  
+📖 Need File Info?     → Read: FILE_LIST.md
+📖 Quick Overview?     → Read: README.md
+
+═══════════════════════════════════════════════════════════════
+  CUSTOMIZATION
+═══════════════════════════════════════════════════════════════
+
+🎨 Change Colors:
+   Edit: static/css/style.css (line 14)
+   --primary-yellow: #YOUR_COLOR;
+
+🖼️ Change Logo:
+   Replace: static/images/logo.png
+
+🔧 Change Port:
+   Edit: app.py (line 299)
+   app.run(..., port=5001)
+
+📝 Add More Flows:
+   See: PROJECT_GUIDE.md → Customization section
+
+═══════════════════════════════════════════════════════════════
+  TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+❌ Server won't start?
+   → Run: pip install flask
+
+❌ Port 5000 in use?
+   → Edit app.py, change port to 5001
+
+❌ Templates not found?
+   → Ensure folder structure is correct
+   → app.py must be in same folder as templates/
+
+❌ Custom flows not showing?
+   → Check if you filled flow name field
+   → Verify form submitted successfully
+   → Check browser console (F12)
+
+═══════════════════════════════════════════════════════════════
+  TESTING CHECKLIST
+═══════════════════════════════════════════════════════════════
+
+Before using, verify:
+☐ Extract all files from ZIP
+☐ Python 3.7+ installed
+☐ Flask installed (pip install flask)
+☐ Run app.py successfully
+☐ Page 1 loads at http://localhost:5000
+☐ Can submit URL and reach Page 2
+☐ Custom flows auto-generate rows
+☐ Custom UI requirements auto-generate rows
+☐ Delete buttons work
+☐ Can reach Page 3 with results
+☐ Custom flows appear in results
+☐ Custom UI requirements appear in results
+☐ Download button works
+☐ Reset button works
+
+═══════════════════════════════════════════════════════════════
+  TECHNICAL SPECS
+═══════════════════════════════════════════════════════════════
+
+Backend:          Flask 3.0.0 (Python)
+Frontend:         HTML5, CSS3, Vanilla JavaScript
+Database:         None (Session-based)
+Storage:          JSON file for history
+Dependencies:     Flask only
+Browser Support:  Chrome, Firefox, Safari, Edge
+Responsive:       Mobile, Tablet, Desktop
+
+═══════════════════════════════════════════════════════════════
+  WHAT'S NEW IN PAGE 2
+═══════════════════════════════════════════════════════════════
+
+✅ UX Flow Configuration Section
+   • Checkboxes for standard flows (Sign up, Login)
+   • Custom flow toggle with dynamic 2-column inputs
+   • Auto-generating rows on input
+   • Delete buttons on additional rows
+
+✅ UI Consistency Configuration Section  
+   • Checkboxes for 5 standard checks
+   • Custom requirement toggle with dynamic input
+   • Auto-generating rows on input
+   • Delete buttons on additional rows
+
+✅ Form Validation
+   • Ensures at least one flow selected
+   • Ensures at least one UI check selected
+   • Validates custom inputs before submission
+
+✅ Session Integration
+   • Custom flows stored in session
+   • Custom UI requirements stored in session
+   • Data passed to Page 3 for display
+
+✅ Professional UI
+   • Matches Page 1 yellow-accent theme
+   • Smooth animations
+   • Responsive design
+   • Back and Continue buttons
+
+═══════════════════════════════════════════════════════════════
+  QUICK REFERENCE COMMANDS
+═══════════════════════════════════════════════════════════════
+
+Install:     pip install flask
+Run:         python app.py
+Access:      http://localhost:5000
+Stop:        Ctrl+C in terminal
+
+Windows:     Double-click run.bat
+Mac/Linux:   ./run.sh
+
+Download:    Click button on Page 3
+Reset:       Click "Run New Test" on Page 3
+
+═══════════════════════════════════════════════════════════════
+  FILES INCLUDED (15 TOTAL)
+═══════════════════════════════════════════════════════════════
+
+✅ app.py                    (Backend)
+✅ requirements.txt          (Dependencies)
+✅ run.sh / run.bat         (Startup scripts)
+✅ page1.html               (URL Input)
+✅ page2.html               (Configuration) ⭐ NEW
+✅ page3.html               (Results)
+✅ style.css                (All styling)
+✅ page1.js / page3.js      (Interactions)
+✅ logo.png                 (Logo)
+✅ README.md                (Basic guide)
+✅ PROJECT_GUIDE.md         (Technical docs)
+✅ QUICK_START.md           (Beginner guide)
+✅ FILE_LIST.md             (File details)
+
+═══════════════════════════════════════════════════════════════
+  READY TO GO!
+═══════════════════════════════════════════════════════════════
+
+Everything is configured and ready to use.
+Just extract the ZIP and run!
+
+Windows:  run.bat
+Mac/Linux: ./run.sh
+Manual:    python app.py
+
+Access at: http://localhost:5000
+
+Questions? Check the documentation files!
+
+═══════════════════════════════════════════════════════════════
+Version: 1.0 | Framework: Flask 3.0.0 | Date: 2026-02-08
+═══════════════════════════════════════════════════════════════

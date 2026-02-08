@@ -3,216 +3,856 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QB Bot - Configure Test</title>
+    <title>QB Bot - Test Configuration</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Page 2 Specific Styles */
+        .config-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.6s ease;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+
+        .progress-step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .step-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+            font-family: var(--font-mono);
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .step-circle.completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .step-circle.active {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--dark-orange) 100%);
+            color: white;
+            box-shadow: 0 0 0 6px rgba(255, 115, 0, 0.2);
+        }
+
+        .step-circle.pending {
+            background: white;
+            border: 3px solid var(--border-light);
+            color: var(--text-light);
+        }
+
+        .step-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-family: var(--font-mono);
+            white-space: nowrap;
+        }
+
+        .step-arrow {
+            color: var(--border-light);
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .page-title {
+            font-size: clamp(32px, 6vw, 48px);
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 12px;
+            background: linear-gradient(135deg, var(--dark-orange) 0%, var(--primary-orange) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .page-subtitle {
+            font-size: clamp(14px, 2vw, 16px);
+            color: var(--text-medium);
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        /* Test Scope Description */
+        .test-scope-description {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 3px solid var(--primary-orange);
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin-bottom: 40px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .scope-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .scope-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .scope-list {
+            margin-top: 16px;
+            padding-left: 24px;
+        }
+
+        .scope-list li {
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-medium);
+            font-weight: 600;
+        }
+
+        .config-section {
+            background: white;
+            border: 3px solid var(--border-light);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .config-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-orange) 0%, var(--dark-orange) 100%);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Enhanced Checkbox Group with 2 columns */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px;
+            background: white;
+            border: 3px solid var(--border-light);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+        }
+
+        .checkbox-item:hover {
+            border-color: var(--primary-orange);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 115, 0, 0.15);
+        }
+
+        .checkbox-item.checked {
+            background: linear-gradient(135deg, #FFE5CC 0%, #FFF4E6 100%);
+            border-color: var(--primary-orange);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--border-light);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            flex-shrink: 0;
+            background: white;
+        }
+
+        .checkbox-item input[type="checkbox"]:checked {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--dark-orange) 100%);
+            border-color: var(--dark-orange);
+        }
+
+        .checkbox-item input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .checkbox-label {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            flex: 1;
+            user-select: none;
+        }
+
+        .custom-flows-container {
+            margin-top: 24px;
+            display: none;
+        }
+
+        .custom-flows-container.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .flow-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr auto;
+            gap: 16px;
+            margin-bottom: 16px;
+            align-items: start;
+            animation: slideDown 0.3s ease;
+        }
+
+        .flow-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .flow-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--font-mono);
+        }
+
+        .flow-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 3px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .flow-input:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 4px rgba(255, 115, 0, 0.1);
+        }
+
+        .flow-input::placeholder {
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .delete-btn {
+            padding: 12px 16px;
+            background: var(--error);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 28px;
+            font-family: var(--font-mono);
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            background: #dc2626;
+            transform: scale(1.05);
+        }
+
+        .custom-ui-container {
+            margin-top: 24px;
+            display: none;
+        }
+
+        .custom-ui-container.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .ui-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 16px;
+            margin-bottom: 16px;
+            align-items: center;
+            animation: slideDown 0.3s ease;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid var(--border-light);
+        }
+
+        .btn {
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--dark-orange) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(255, 115, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 3px solid var(--border-light);
+            color: var(--text-dark);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-orange);
+            transform: translateY(-2px);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from { 
+                opacity: 0; 
+                transform: translateY(-30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Scale down progress indicator */
+            .progress-indicator {
+                gap: 8px;
+            }
+            
+            .step-circle {
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+            }
+            
+            .step-label {
+                font-size: 13px;
+            }
+            
+            .step-arrow {
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .flow-row {
+                grid-template-columns: 1fr;
+            }
+
+            .delete-btn {
+                margin-top: 0;
+                width: 100%;
+            }
+
+            .ui-row {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .config-section {
+                padding: 28px 24px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            /* Further scale down progress indicator */
+            .progress-indicator {
+                gap: 6px;
+            }
+            
+            .step-circle {
+                width: 32px;
+                height: 32px;
+                font-size: 12px;
+            }
+            
+            .step-label {
+                font-size: 11px;
+            }
+            
+            .step-arrow {
+                font-size: 16px;
+            }
+            
+            .step-circle.active {
+                box-shadow: 0 0 0 4px rgba(255, 115, 0, 0.2);
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container wide">
-        <a href="/" class="logo-link">
-            <div class="logo-section-small">
-                <div class="logo-icon-small">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="QB Bot Logo" class="logo-image-small" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-                    <svg width="40" height="40" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
-                        <path d="M30 5L35 15L45 10L40 20L50 25L40 30L45 40L35 35L30 45L25 35L15 40L20 30L10 25L20 20L15 10L25 15L30 5Z" fill="#fbbf24"/>
-                    </svg>
-                </div>
-                <span class="logo-text-small">QB Bot</span>
-            </div>
-        </a>
-
+    <div class="config-container">
         <!-- Progress Indicator -->
         <div class="progress-indicator">
-            <div class="progress-step completed">
-                <span class="step-number">✓</span>
+            <div class="progress-step">
+                <div class="step-circle completed">✓</div>
+                <span class="step-label">URL Input</span>
+            </div>
+            <span class="step-arrow">→</span>
+            <div class="progress-step">
+                <div class="step-circle active">2</div>
                 <span class="step-label">Configure</span>
             </div>
-            <div class="progress-line active"></div>
-            <div class="progress-step active">
-                <span class="step-number">2</span>
-                <span class="step-label">Select Tests</span>
-            </div>
-            <div class="progress-line"></div>
+            <span class="step-arrow">→</span>
             <div class="progress-step">
-                <span class="step-number">3</span>
+                <div class="step-circle pending">3</div>
                 <span class="step-label">Results</span>
             </div>
         </div>
 
-        <!-- URL Display -->
-        <div class="url-badge">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 0L10 6L16 8L10 10L8 16L6 10L0 8L6 6L8 0Z" fill="currentColor"/>
-            </svg>
-            <span>{{ url }}</span>
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Configure Your Test</h1>
+            <p class="page-subtitle">Select flows and consistency checks to include in your test</p>
         </div>
 
-        <!-- Tests Form Section -->
-        <div class="form-section">
-            <form action="{{ url_for('run_tests') }}" method="POST" id="testsForm">
-            
-            <!-- 1. Test Scope -->
-            <div class="section-card">
-                <div class="section-header">
-                    <span class="section-number">01</span>
-                    <h2>Test Scope</h2>
-                </div>
-                
-                <div class="checkbox-grid">
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="test_scope" value="Layout & visual consistency">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Layout & Visual Consistency</span>
-                    </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="test_scope" value="Responsiveness">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Responsiveness</span>
-                    </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="test_scope" value="Accessibility">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Accessibility</span>
-                    </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="test_scope" value="Navigation & user flow">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Navigation & User Flow</span>
-                    </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="test_scope" value="Micro-interactions & animations">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Micro-interactions & Animations</span>
-                    </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="test_scope" value="Error states & empty states">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Error States & Empty States</span>
-                    </label>
-                </div>
-            </div>
+        <!-- Test Scope Description -->
+        <div class="test-scope-description">
+            <h3 class="scope-title">📋 What Will Be Tested</h3>
+            <p class="scope-text">
+                QB Bot will analyze your website's user experience and interface consistency based on your selections below. 
+                Our AI-powered testing will examine:
+            </p>
+            <ul class="scope-list">
+                <li>✓ User flow completion rates and friction points</li>
+                <li>✓ Visual consistency across all interface elements</li>
+                <li>✓ Responsive design behavior on multiple devices</li>
+                <li>✓ Accessibility compliance (WCAG standards)</li>
+                <li>✓ Interaction patterns and micro-animations</li>
+                <li>✓ Custom requirements you specify below</li>
+            </ul>
+        </div>
 
-            <!-- 2. UI Consistency Checklist -->
-            <div class="section-card">
-                <div class="section-header">
-                    <span class="section-number">02</span>
-                    <h2>UI Consistency Checklist</h2>
-                </div>
+        <form action="{{ url_for('results') }}" method="POST" id="configForm">
+            <!-- UX Flow & Usability Section -->
+            <div class="config-section">
+                <h2 class="section-title">UX Flow & Usability</h2>
                 
-                <div class="checkbox-grid">
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="ui_checklist" value="Color usage matches design">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Color Usage Matches Design</span>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="ux_flow" value="signup" checked>
+                        <span class="checkbox-label">Sign up flow</span>
                     </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="ui_checklist" value="Typography consistent">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Typography Consistent</span>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="ux_flow" value="login" checked>
+                        <span class="checkbox-label">Login flow</span>
                     </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="ui_checklist" value="Spacing & alignment correct">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Spacing & Alignment Correct</span>
-                    </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="ui_checklist" value="Icons & imagery consistent">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Icons & Imagery Consistent</span>
-                    </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="ui_checklist" value="Branding applied correctly">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Branding Applied Correctly</span>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="customFlowToggle">
+                        <span class="checkbox-label">Custom flow</span>
                     </label>
                 </div>
 
-                <!-- Custom UI Requirements -->
-                <div class="custom-section">
-                    <div class="custom-header">
-                        <h3>Custom UI Requirements</h3>
-                    </div>
-                    <p class="custom-note">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display: inline; margin-right: 6px;">
-                            <path d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 10.5c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75zM7.75 7.5h-1.5v-4h1.5v4z" fill="currentColor"/>
-                        </svg>
-                        Leave blank if you don't need custom requirements checked
-                    </p>
-                    <div id="customUIContainer">
-                        <div class="custom-row">
-                            <input type="text" name="custom_ui_name[]" placeholder="Requirement Name" class="custom-input" />
-                            <input type="text" name="custom_ui_desc[]" placeholder="AI Description (e.g., 'Check header logo alignment on mobile')" class="custom-input-desc" />
-                            <button type="button" class="btn-remove" onclick="removeRow(this)" style="visibility: hidden;">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                </svg>
-                            </button>
-                        </div>
+                <!-- Custom Flows Container -->
+                <div class="custom-flows-container" id="customFlowsContainer">
+                    <div id="flowRowsContainer">
+                        <!-- Rows will be added by JavaScript -->
                     </div>
                 </div>
             </div>
 
-            <!-- 3. UX Flow & Usability -->
-            <div class="section-card">
-                <div class="section-header">
-                    <span class="section-number">03</span>
-                    <h2>UX Flow & Usability</h2>
-                </div>
+            <!-- UI Consistency Checklist Section -->
+            <div class="config-section">
+                <h2 class="section-title">UI Consistency Checklist</h2>
                 
-                <div class="checkbox-grid">
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="ux_flows" value="Sign up flow">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Sign Up Flow</span>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="ui_check" value="color" checked>
+                        <span class="checkbox-label">Color usage matches design</span>
                     </label>
-                    <label class="checkbox-card">
-                        <input type="checkbox" name="ux_flows" value="Login flow">
-                        <span class="checkbox-custom"></span>
-                        <span class="checkbox-label">Login Flow</span>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="ui_check" value="typography" checked>
+                        <span class="checkbox-label">Typography consistent</span>
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="ui_check" value="spacing" checked>
+                        <span class="checkbox-label">Spacing & alignment correct</span>
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="ui_check" value="icons" checked>
+                        <span class="checkbox-label">Icons & imagery consistent</span>
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="ui_check" value="branding" checked>
+                        <span class="checkbox-label">Branding applied correctly</span>
+                    </label>
+
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="customUIToggle">
+                        <span class="checkbox-label">Custom Requirement</span>
                     </label>
                 </div>
 
-                <!-- Custom UX Flows -->
-                <div class="custom-section">
-                    <div class="custom-header">
-                        <h3>Custom UX Flows</h3>
-                    </div>
-                    <p class="custom-note">
-                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="display: inline; margin-right: 6px;">
-                            <path d="M7 0C3.13 0 0 3.13 0 7s3.13 7 7 7 7-3.13 7-7-3.13-7-7-7zm0 10.5c-.41 0-.75-.34-.75-.75s.34-.75.75-.75.75.34.75.75-.34.75-.75.75zM7.75 7.5h-1.5v-4h1.5v4z" fill="currentColor"/>
-                        </svg>
-                        Leave blank if you don't need custom flows checked
-                    </p>
-                    <div id="customUXContainer">
-                        <div class="custom-row">
-                            <input type="text" name="custom_ux_name[]" placeholder="Flow Name" class="custom-input" />
-                            <input type="text" name="custom_ux_desc[]" placeholder="AI Description (e.g., 'Test checkout process from cart to confirmation')" class="custom-input-desc" />
-                            <button type="button" class="btn-remove" onclick="removeRow(this)" style="visibility: hidden;">
-                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                                    <path d="M5 5L15 15M5 15L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-                                </svg>
-                            </button>
-                        </div>
+                <!-- Custom UI Requirements Container -->
+                <div class="custom-ui-container" id="customUIContainer">
+                    <div id="uiRowsContainer">
+                        <!-- Rows will be added by JavaScript -->
                     </div>
                 </div>
             </div>
 
             <!-- Action Buttons -->
             <div class="action-buttons">
-                <a href="{{ url_for('reset') }}" class="btn btn-secondary">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M12.5 15L7.5 10L12.5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
-                    <span>Back</span>
-                </a>
+                <button type="button" class="btn btn-secondary" onclick="window.history.back()">
+                    ← Back
+                </button>
                 <button type="submit" class="btn btn-primary">
-                    <span>Run Tests</span>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                        <path d="M5 10L8 13L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    </svg>
+                    Continue to Test →
                 </button>
             </div>
-        </form>        </div>    </div>
+        </form>
+    </div>
 
-    <script src="{{ url_for('static', filename='js/page2.js') }}"></script>
+    <script>
+        // Add checked class to checkboxes on load and change
+        document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(checkbox => {
+            const updateCheckedClass = () => {
+                if (checkbox.checked) {
+                    checkbox.closest('.checkbox-item').classList.add('checked');
+                } else {
+                    checkbox.closest('.checkbox-item').classList.remove('checked');
+                }
+            };
+            
+            updateCheckedClass();
+            checkbox.addEventListener('change', updateCheckedClass);
+        });
+
+        // UX Flow Custom Flows Management - Enhanced Logic
+        const customFlowToggle = document.getElementById('customFlowToggle');
+        const customFlowsContainer = document.getElementById('customFlowsContainer');
+        const flowRowsContainer = document.getElementById('flowRowsContainer');
+        let flowRowCount = 0;
+        let flowRows = [];
+
+        customFlowToggle.addEventListener('change', function() {
+            if (this.checked) {
+                customFlowsContainer.classList.add('active');
+                if (flowRows.length === 0) {
+                    addFlowRow();
+                }
+            } else {
+                customFlowsContainer.classList.remove('active');
+                flowRowsContainer.innerHTML = '';
+                flowRows = [];
+                flowRowCount = 0;
+            }
+        });
+
+        function addFlowRow() {
+            const rowId = `flow-row-${flowRowCount}`;
+            const row = document.createElement('div');
+            row.className = 'flow-row';
+            row.id = rowId;
+            row.dataset.rowIndex = flowRowCount;
+            
+            row.innerHTML = `
+                <div class="flow-input-group">
+                    <label class="flow-label">Flow Name</label>
+                    <input 
+                        type="text" 
+                        class="flow-input flow-name" 
+                        name="custom_flow_name[]" 
+                        placeholder="e.g., Checkout process"
+                        data-row="${flowRowCount}"
+                    >
+                </div>
+                <div class="flow-input-group">
+                    <label class="flow-label">Description</label>
+                    <input 
+                        type="text" 
+                        class="flow-input flow-description" 
+                        name="custom_flow_description[]" 
+                        placeholder="e.g., User completes purchase from cart to confirmation"
+                    >
+                </div>
+                <div class="delete-btn-wrapper"></div>
+            `;
+            
+            flowRowsContainer.appendChild(row);
+            flowRows.push({ id: rowId, index: flowRowCount, filled: false });
+            
+            // Add event listeners to inputs
+            const flowNameInput = row.querySelector('.flow-name');
+            const flowDescInput = row.querySelector('.flow-description');
+            
+            const checkIfFilled = () => {
+                const rowData = flowRows.find(r => r.id === rowId);
+                const isFilled = flowNameInput.value.trim() !== '';
+                
+                if (isFilled && !rowData.filled) {
+                    // Row just became filled
+                    rowData.filled = true;
+                    addDeleteButton(row);
+                    
+                    // Check if we need to add a new empty row
+                    const hasEmptyRow = flowRows.some(r => !r.filled);
+                    if (!hasEmptyRow) {
+                        flowRowCount++;
+                        addFlowRow();
+                    }
+                } else if (!isFilled && rowData.filled) {
+                    // Row just became empty
+                    rowData.filled = false;
+                }
+            };
+            
+            flowNameInput.addEventListener('input', checkIfFilled);
+            flowDescInput.addEventListener('input', checkIfFilled);
+            
+            flowRowCount++;
+        }
+
+        function addDeleteButton(row) {
+            const deleteWrapper = row.querySelector('.delete-btn-wrapper');
+            deleteWrapper.innerHTML = '<button type="button" class="delete-btn" onclick="deleteFlowRow(\'' + row.id + '\')">✕</button>';
+        }
+
+        function deleteFlowRow(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                // Remove from array
+                flowRows = flowRows.filter(r => r.id !== rowId);
+                row.remove();
+                
+                // Ensure we always have at least one empty row
+                const hasEmptyRow = flowRows.some(r => !r.filled);
+                if (!hasEmptyRow) {
+                    addFlowRow();
+                }
+            }
+        }
+
+        // UI Consistency Custom Requirements Management - Enhanced Logic
+        const customUIToggle = document.getElementById('customUIToggle');
+        const customUIContainer = document.getElementById('customUIContainer');
+        const uiRowsContainer = document.getElementById('uiRowsContainer');
+        let uiRowCount = 0;
+        let uiRows = [];
+
+        customUIToggle.addEventListener('change', function() {
+            if (this.checked) {
+                customUIContainer.classList.add('active');
+                if (uiRows.length === 0) {
+                    addUIRow();
+                }
+            } else {
+                customUIContainer.classList.remove('active');
+                uiRowsContainer.innerHTML = '';
+                uiRows = [];
+                uiRowCount = 0;
+            }
+        });
+
+        function addUIRow() {
+            const rowId = `ui-row-${uiRowCount}`;
+            const row = document.createElement('div');
+            row.className = 'ui-row';
+            row.id = rowId;
+            row.dataset.rowIndex = uiRowCount;
+            
+            row.innerHTML = `
+                <div class="flow-input-group">
+                    <label class="flow-label">Requirement</label>
+                    <input 
+                        type="text" 
+                        class="flow-input ui-requirement" 
+                        name="custom_ui_requirement[]" 
+                        placeholder="e.g., Button states are consistent across all pages"
+                        data-row="${uiRowCount}"
+                    >
+                </div>
+                <div class="delete-btn-wrapper"></div>
+            `;
+            
+            uiRowsContainer.appendChild(row);
+            uiRows.push({ id: rowId, index: uiRowCount, filled: false });
+            
+            // Add event listener to the UI requirement input
+            const uiRequirementInput = row.querySelector('.ui-requirement');
+            
+            const checkIfFilled = () => {
+                const rowData = uiRows.find(r => r.id === rowId);
+                const isFilled = uiRequirementInput.value.trim() !== '';
+                
+                if (isFilled && !rowData.filled) {
+                    // Row just became filled
+                    rowData.filled = true;
+                    addDeleteButtonUI(row);
+                    
+                    // Check if we need to add a new empty row
+                    const hasEmptyRow = uiRows.some(r => !r.filled);
+                    if (!hasEmptyRow) {
+                        uiRowCount++;
+                        addUIRow();
+                    }
+                } else if (!isFilled && rowData.filled) {
+                    // Row just became empty
+                    rowData.filled = false;
+                }
+            };
+            
+            uiRequirementInput.addEventListener('input', checkIfFilled);
+            
+            uiRowCount++;
+        }
+
+        function addDeleteButtonUI(row) {
+            const deleteWrapper = row.querySelector('.delete-btn-wrapper');
+            deleteWrapper.innerHTML = '<button type="button" class="delete-btn" onclick="deleteUIRow(\'' + row.id + '\')">✕</button>';
+        }
+
+        function deleteUIRow(rowId) {
+            const row = document.getElementById(rowId);
+            if (row) {
+                // Remove from array
+                uiRows = uiRows.filter(r => r.id !== rowId);
+                row.remove();
+                
+                // Ensure we always have at least one empty row
+                const hasEmptyRow = uiRows.some(r => !r.filled);
+                if (!hasEmptyRow) {
+                    addUIRow();
+                }
+            }
+        }
+
+        // Form validation
+        document.getElementById('configForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Check if at least one UX flow is selected
+            const uxFlows = document.querySelectorAll('input[name="ux_flow"]:checked');
+            const filledFlows = flowRows.filter(r => r.filled);
+            
+            if (uxFlows.length === 0 && filledFlows.length === 0 && !customFlowToggle.checked) {
+                alert('Please select at least one UX flow or add a custom flow');
+                return;
+            }
+            
+            // Check if at least one UI check is selected
+            const uiChecks = document.querySelectorAll('input[name="ui_check"]:checked');
+            const filledUIReqs = uiRows.filter(r => r.filled);
+            
+            if (uiChecks.length === 0 && filledUIReqs.length === 0 && !customUIToggle.checked) {
+                alert('Please select at least one UI consistency check or add a custom requirement');
+                return;
+            }
+            
+            // If validation passes, submit the form
+            this.submit();
+        });
+    </script>
 </body>
 </html>

@@ -1,158 +1,105 @@
 # QB Bot - UI/UX Inspector
 
-A comprehensive Flask-based web application for automated UI/UX testing with AI-powered analysis.
+A comprehensive UI/UX testing platform with customizable test configurations.
 
 ## Features
 
-- **Comprehensive Configuration**: Configure all testing parameters on the first page
-- **Multi-Environment Support**: Test on Web, iOS, Android, and Desktop platforms
-- **Flexible Testing Criteria**: Choose from predefined tests or add custom requirements
-- **AI-Powered Analysis**: Custom descriptions guide AI testing
-- **Performance Metrics**: Track FCP, Page Load, and Speed Index
-- **Testing History**: View past test results with scores
-- **Download Results**: Export detailed test reports
+- **Page 1**: URL input with environment, browser, and tester configuration
+- **Page 2**: Custom UX flows and UI consistency requirements
+- **Page 3**: Detailed test results dashboard with scores and analytics
 
 ## Installation
 
-1. **Clone or download this repository**
+1. Install Python 3.7 or higher
 
-2. **Create a virtual environment**
+2. Install required packages:
 ```bash
-   python -m venv venv
+pip install flask
 ```
-
-3. **Activate the virtual environment**
-   - Windows:
-```bash
-     venv\Scripts\activate
-```
-   - Mac/Linux:
-```bash
-     source venv/bin/activate
-```
-
-4. **Install dependencies**
-```bash
-   pip install -r requirements.txt
-```
-
-## Usage
-
-1. **Start the application**
-```bash
-   python app.py
-```
-
-2. **Open your browser**
-   Navigate to `http://localhost:5000`
-
-3. **Configure and Run Tests**
-   - **Page 1**: Enter URL and configure all test parameters
-   - **Page 2**: Select test criteria and add custom tests
-   - **Page 3**: View comprehensive results with performance metrics
 
 ## Project Structure
+
 ```
-qb-bot/
-├── app.py                      # Flask backend
-├── requirements.txt            # Python dependencies
-├── README.md                   # This file
-├── .gitignore                  # Git ignore rules
+qb-bot-complete/
+├── app.py                      # Flask application
 ├── templates/
-│   ├── page1.html             # Configuration page
-│   ├── page2.html             # Test selection page
-│   └── page3.html             # Results page
-└── static/
-    ├── css/
-    │   └── style.css          # All styling
-    ├── js/
-    │   ├── page1.js           # Page 1 JavaScript
-    │   └── page2.js           # Page 2 JavaScript
-    └── images/
-        └── logo.png           # Your logo (add this)
+│   ├── page1.html             # URL input page
+│   ├── page2.html             # Test configuration page
+│   └── page3.html             # Results dashboard
+├── static/
+│   ├── css/
+│   │   └── style.css          # Main stylesheet
+│   ├── js/
+│   │   ├── page1.js           # Page 1 functionality
+│   │   └── page3.js           # Page 3 functionality
+│   └── images/
+│       └── logo.png           # (Add your logo here)
+└── test_history.json          # Generated automatically
+
 ```
 
-## Configuration Options
+## Running the Application
 
-### Page 1 - Report Configuration
-- **URL**: Website to test
-- **Environment**: Web, iOS, Android, Desktop
-- **Resolution**: Dynamic based on environment
-- **Browser**: Chrome, Firefox, Safari, Edge, Others
-- **Tester Level**: Newbie, Expert, Custom
-- **Test Date**: Automatic date picker
-
-### Page 2 - Test Selection
-- **Test Scope**: 6 predefined categories
-- **UI Consistency**: 5 standard checks + custom
-- **UX Flow**: Standard flows + custom flows
-
-## Adding Your Logo
-
-Place your logo file at:
-```
-static/images/logo.png
-```
-
-Supported formats: PNG, SVG, JPG
-
-## Technologies
-
-- **Backend**: Flask 3.0.0
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Date Picker**: Flatpickr
-- **Session Management**: Flask Sessions
-- **Data Storage**: JSON file (upgradeable to database)
-
-## Features in Detail
-
-### Auto-Row Generation
-- Custom requirement rows auto-generate as you type
-- No manual "Add" buttons needed
-- Last row always remains for new entries
-
-### Performance Scoring
-- Real-time score calculation
-- Color-coded metrics (Green/Yellow/Red)
-- Historical tracking with visual indicators
-
-### Smart Validation
-- URL validation
-- Required field checking
-- Environment-specific resolution options
-
-## Deployment
-
-For production:
-1. Set `debug=False` in `app.py`
-2. Use a production WSGI server (Gunicorn, uWSGI)
-3. Set up reverse proxy (Nginx)
-4. Use environment variables for secrets
-5. Consider upgrading to a proper database
-
-Example with Gunicorn:
+1. Navigate to the project directory:
 ```bash
-pip install gunicorn
-gunicorn -w 4 -b 0.0.0.0:5000 app:app
+cd qb-bot-complete
 ```
+
+2. Run the Flask application:
+```bash
+python app.py
+```
+
+3. Open your browser and go to:
+```
+http://localhost:5000
+```
+
+## Usage Flow
+
+1. **Page 1 - URL Input**
+   - Enter the URL to test
+   - Select environment (Web, iOS, Android, Desktop)
+   - Choose browser and tester level
+   - Click "Run Test"
+
+2. **Page 2 - Configuration**
+   - Select standard UX flows (Sign up, Login)
+   - Add custom flows with name and description
+   - Select UI consistency checks
+   - Add custom UI requirements
+   - Click "Continue to Test"
+
+3. **Page 3 - Results**
+   - View overall score and grade
+   - See detailed test results
+   - Review issues and recommendations
+   - Download or reset test
+
+## Custom Features
+
+### Dynamic Custom Flows
+- Add unlimited custom UX flows
+- Automatically generates new input rows
+- Delete unwanted flows with X button
+
+### Dynamic UI Requirements
+- Add custom UI consistency requirements
+- Auto-expanding input fields
+- Easy deletion of requirements
+
+## Notes
+
+- Logo: Place your logo image at `static/images/logo.png` (100x100px recommended)
+- History: The last 10 tests are automatically saved to `test_history.json`
+- Session: Test configurations are stored in Flask session
+
+## Customization
+
+- Edit `static/css/style.css` to change colors and styling
+- Modify `app.py` to adjust test generation logic
+- Update templates for different layouts
 
 ## License
 
-MIT License
-
-## Support
-
-For issues or questions, please open an issue on the repository.
-```
-
----
-
-## **Folder Structure to Create**
-
-Create these folders:
-```
-static/
-  css/
-  js/
-  images/     (place your logo here as logo.png)
-templates/
+Private use only.
